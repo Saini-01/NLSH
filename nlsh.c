@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     char input[MAX_INPUT];
 
     while(1){
-        printf("nlsh>\n")
-        
+        printf("nlsh>\n");  
     }
+    
 }
