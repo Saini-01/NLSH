@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAX_INPUT 1024
 #define MAX_ARGS 64
@@ -35,6 +36,23 @@ int main(int argc, char *argv[]){
         
         for (int j = 0; j < i; j++) {
             printf("arg[%d]: %s\n", j, args[j]);
+        }
+
+        pid_t pid = fork();
+
+        if (pid == -1) {
+            fprintf(stderr, "Call to fork failed... aborting.\n");
+            exit(1);
+        }
+
+        else if(pid == 0){
+           execvp(args[0], args);
+           perror("exec failed");
+           exit(1);
+        }
+
+        else{
+            wait(NULL);
         }
 
     }
