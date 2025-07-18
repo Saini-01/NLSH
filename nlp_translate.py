@@ -1,4 +1,19 @@
 import sys
+from openai import OpenAI
+
+client = OpenAI(
+  api_key="API KEY"
+)
+
+completion = client.chat.completions.create(
+  model="gpt-4o-mini",
+  store=True,
+  messages=[
+    {"role": "user", "content": "write a haiku about ai"}
+  ]
+)
+
+print(completion.choices[0].message);
 
 input_text = ' '.join(sys.argv[1:]).lower()
 
