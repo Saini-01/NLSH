@@ -21,6 +21,25 @@ int main(int argc, char *argv[]){
         }
         
         input[strcspn(input, "\n")] = 0;
+
+        char translated[MAX_INPUT];
+        FILE *pipe;
+        char cmd[MAX_INPUT];
+
+        snprintf(cmd, sizeof(cmd), "python3 nlp_translate.py \"%s\"", input);
+        pipe = popen(cmd, "r");
+
+        if (pipe == NULL) {
+            perror("popen failed");
+            continue;
+        }
+
+        if (fgets(translated, MAX_INPUT, pipe) != NULL) {
+            translated[strcspn(translated, "\n")] = 0;
+            strncpy(input, translated, MAX_INPUT);
+        }
+
+        pclose(pipe);
         
         if(strcmp(input, "exit") == 0 || strcmp(input, "quit") == 0) {
             break;
@@ -34,9 +53,20 @@ int main(int argc, char *argv[]){
         }
         args[i] = NULL; 
         
-        for (int j = 0; j < i; j++) {
-            printf("arg[%d]: %s\n", j, args[j]);
+        if (args[0] == NULL) {
+            continue;
         }
+        
+        // for (int j = 0; j < i; j++) {
+        //     printf("arg[%d]: %s\n", j, args[j]);
+        // }
+
+        if (strcmp(args[0], "cd") == 0) {
+            if (args[1] == NULL || chdir(args[1]) != 0) {
+                perror("cd failed");
+        }
+        continue;
+    }
 
         pid_t pid = fork();
 
@@ -52,7 +82,7 @@ int main(int argc, char *argv[]){
         }
 
         else{
-            wait(NULL);
+            waitpid(pid, NULL, 0);
         }
 
     }
