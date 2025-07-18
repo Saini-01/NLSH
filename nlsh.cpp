@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
         char cmd[MAX_INPUT];
 
         //format's string and writes it into cmd buffer, reads output from python file
-        snprintf(cmd, sizeof(cmd), "python3 nlp_translate.py \"%s\"", input);
+        snprintf(cmd, sizeof(cmd), "python nlp_translate.py \"%s\"", input);
         pipe = popen(cmd, "r");
 
         //if pipe fails to open 
