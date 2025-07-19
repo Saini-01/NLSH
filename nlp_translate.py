@@ -6,7 +6,7 @@ load_dotenv()
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv('KEY'),
+    api_key=os.getenv("OPENROUTER_KEY"),
 )
 
 input_text = " ".join(sys.argv[1:]).lower()
@@ -37,10 +37,10 @@ if input_text.startswith("ai>"):
         model="deepseek/deepseek-r1:free",
         messages=[
             {"role": "system", "content": f"You are a helpful assistant that returns only terminal commands. Respond only with a valid terminal command that matches the user's request. The user's operating system is: {current_os}"},
-            {"role": "user", "content": "Return the terminal command to: " + input_text}
+            {"role": "user", "content": f"Return ONLY the terminal command to: {input_text}. Do not wrap it in markdown or backticks."}
         ],
     )
-    print("echo " + completion.choices[0].message.content.replace('\n', "").split('```bash')[1].split('```')[0].strip())
+    print(completion.choices[0].message.content.strip())
 else:
     for phrase, cmd in mappings.items():
         if input_text.startswith(phrase):
