@@ -31,24 +31,31 @@ int main(int argc, char *argv[]){
         FILE *pipe;
         char cmd[MAX_INPUT];
 
-        //format's string and writes it into cmd buffer, reads output from python file
-        snprintf(cmd, sizeof(cmd), "python3 nlp_translate.py \"%s\"", input);
-        pipe = popen(cmd, "r");
-
-        //if pipe fails to open 
-        if (pipe == NULL) {
-            perror("popen failed");
-            continue;
+        if(access("nlp_translate.py", F_OK) != 0){
+            perror("nlp translation file not found");
         }
 
-        //if sucessfully read from pipe, format and replace input with translated command
-        if (fgets(translated, MAX_INPUT, pipe) != NULL) {
-            translated[strcspn(translated, "\n")] = 0;
-            strncpy(input, translated, MAX_INPUT);
-        }
+        else {
 
-        //close the pipe
-        pclose(pipe);
+            //format's string and writes it into cmd buffer, reads output from python file
+            snprintf(cmd, sizeof(cmd), "python3 nlp_translate.py \"%s\"", input);
+            pipe = popen(cmd, "r");
+
+            //if pipe fails to open 
+            if (pipe == NULL) {
+                perror("popen failed");
+                continue;
+            }
+
+            //if sucessfully read from pipe, format and replace input with translated command
+            if (fgets(translated, MAX_INPUT, pipe) != NULL) {
+                translated[strcspn(translated, "\n")] = 0;
+                strncpy(input, translated, MAX_INPUT);
+            }
+
+            //close the pipe
+            pclose(pipe);
+    }
         
         //exit on "exit" or "quit"
         if(strcmp(input, "exit") == 0 || strcmp(input, "quit") == 0) {
