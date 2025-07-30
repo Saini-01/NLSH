@@ -11,6 +11,8 @@ int main(int argc, char *argv[]){
     char input[MAX_INPUT];
     char *tokens;
     char *args[MAX_ARGS];
+
+    printf("To use NLP for prompt, use \"ai>\"\n");
     
     while(1){
         printf("nlsh> ");
@@ -31,8 +33,8 @@ int main(int argc, char *argv[]){
         FILE *pipe;
         char cmd[MAX_INPUT];
 
-        if(access("nlp_translate.py", F_OK) != 0){
-            perror("nlp translation file not found");
+        if (access("nlp_translate.py", F_OK) != 0) {
+               return -1;
         }
 
         else {
@@ -96,6 +98,9 @@ int main(int argc, char *argv[]){
         else if(pid == 0){
            execvp(args[0], args);
            perror("exec failed");
+            if (access("nlp_translate.py", F_OK) != 0) {
+               perror("nlp translation file not found");
+           }
            exit(1);
         }
 
