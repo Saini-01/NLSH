@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     char *tokens;
     char *args[MAX_ARGS];
 
-    printf("To use NLP for prompt, use \"ai>\"\n");
+    printf("To use NLP for prompt, use \"ai> \"\n");
     
     while(1){
         printf("nlsh> ");
@@ -63,6 +63,15 @@ int main(int argc, char *argv[]){
         if(strcmp(input, "exit") == 0 || strcmp(input, "quit") == 0) {
             break;
         }
+
+        if(strcmp(input, "help") == 0){
+            printf(
+                "Available Commands:\n"
+                " - help: Show this help message\n"
+                " - exit/quit: Exit the shell\n"
+                " - ai> [query]: Use AI to translate the query to a command\n"
+            );
+        }
         
         // tokenize the input string into arguments for execvp
         int i = 0;
@@ -95,7 +104,7 @@ int main(int argc, char *argv[]){
         }
 
         //execute on child process
-        else if(pid == 0){
+        else if(pid == 0 && strcmp(input, "help") != 0){
            execvp(args[0], args);
            perror("exec failed");
             if (access("nlp_translate.py", F_OK) != 0) {
